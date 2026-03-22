@@ -13,6 +13,7 @@ import os
 from typing import Optional, Dict, Any
 from eth_account import Account
 from eth_account.messages import encode_defunct, encode_typed_data
+from config import POLYMARKET_SIGNATURE_TYPE
 
 
 class WalletError(Exception):
@@ -101,7 +102,7 @@ class Wallet:
             }
         """
         try:
-            encoded_data = encode_typed_data(typed_data)
+            encoded_data = encode_typed_data(full_message=typed_data)
             signed_message = self.account.sign_message(encoded_data)
             return signed_message.signature.hex()
         except Exception as exc:
@@ -281,7 +282,7 @@ class PolymarketOrderSigner:
             "nonce": nonce,
             "feeRateBps": fee_rate_bps,
             "side": side,
-            "signatureType": 0,  # EOA signature
+            "signatureType": POLYMARKET_SIGNATURE_TYPE,  # 0=EOA, 1=Magic/Email, 2=Proxy
         }
 
         typed_data = {
@@ -292,8 +293,13 @@ class PolymarketOrderSigner:
         }
 
         signature = self.wallet.sign_typed_data(typed_data)
+        sig_type_names = {0: "EOA", 1: "Magic/Email", 2: "Proxy"}
         logging.info(
-            "Signed Polymarket order: side=%d, signature=%s...", side, signature[:10]
+            "Signed Polymarket order: side=%d, signatureType=%d (%s), signature=%s...",
+            side,
+            POLYMARKET_SIGNATURE_TYPE,
+            sig_type_names.get(POLYMARKET_SIGNATURE_TYPE, "Unknown"),
+            signature[:10]
         )
         return signature
 

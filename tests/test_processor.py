@@ -11,12 +11,12 @@ from core import processor  # noqa: E402
 
 @pytest.mark.asyncio
 async def test_process_depth():
-    # Тестируем с числовыми значениями глубины
+    # 测试 使用 числовыми значениями глубины
     pm_depth = 1900.0  # 1100 + 800
     sx_depth = 1900.0  # 800 + 1100
 
     result = await processor.process_depth(pm_depth, sx_depth)
-    assert abs(result - 0.0010) < 1e-6  # Ожидаем проскальзывание для глубины 1900
+    assert abs(result - 0.0010) < 1e-6  # Ожидаем 滑点 用于 глубины 1900
 
 
 @pytest.mark.asyncio
@@ -29,7 +29,7 @@ async def test_process_depth_empty_config():
         # Set empty dictionary
         processor.SLIP_BY_DEPTH = {}
 
-        # Тестируем с числовыми значениями глубины
+        # 测试 使用 числовыми значениями глубины
         pm_depth = 1900.0
         sx_depth = 1900.0
 

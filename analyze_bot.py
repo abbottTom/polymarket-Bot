@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Детальный анализ логики арбитражного бота
+Детальный 分析 логики арбитражного бота
 """
 
 import asyncio
@@ -20,7 +20,7 @@ def analyze_config():
     print(f"SLIP_BY_DEPTH: {SLIP_BY_DEPTH}")
     print("\nЛогика проскальзывания:")
     for depth, slip in sorted(SLIP_BY_DEPTH.items(), reverse=True):
-        print(f"  - Глубина ≥ {depth}: проскальзывание {slip:.4f}")
+        print(f"  - 深度 ≥ {depth}: 滑点 {slip:.4f}")
     print()
 
 
@@ -29,15 +29,15 @@ def analyze_processor_logic():
     print("⚙️ АНАЛИЗ ЛОГИКИ ПРОЦЕССОРА")
     print("=" * 50)
 
-    # Тестируем граничные случаи
+    # 测试 граничные случаи
     test_cases = [
-        (2000, 1800, "Очень высокая глубина"),
+        (2000, 1800, "Очень высокая 深度"),
         (1000, 1000, "Точная граница 1000"),
         (999, 999, "Чуть ниже границы 1000"),
         (500, 500, "Точная граница 500"),
         (499, 499, "Чуть ниже границы 500"),
         (0, 0, "Точная граница 0"),
-        (-100, -100, "Отрицательная глубина"),
+        (-100, -100, "Отрицательная 深度"),
     ]
 
     for pm_depth, sx_depth, description in test_cases:
@@ -56,7 +56,7 @@ def analyze_matcher_logic():
     print("🔍 АНАЛИЗ ЛОГИКИ МАТЧЕРА")
     print("=" * 50)
 
-    # Тестируем нормализацию
+    # 测试 нормализацию
     test_strings = [
         "Boston Celtics @ LA Clippers",
         "boston celtics @ la clippers",
@@ -78,13 +78,13 @@ def analyze_error_handling():
     print("🚨 АНАЛИЗ ОБРАБОТКИ ОШИБОК")
     print("=" * 50)
 
-    # Тестируем различные сценарии ошибок
+    # 测试 различные сценарии ошибок
     error_cases = [
-        (None, 100, "None для PM"),
-        (100, None, "None для SX"),
-        (float("inf"), 100, "Бесконечность для PM"),
-        (100, float("-inf"), "Минус бесконечность для SX"),
-        (0, 0, "Нулевая глубина"),
+        (None, 100, "None 用于 PM"),
+        (100, None, "None 用于 SX"),
+        (float("inf"), 100, "Бесконечность 用于 PM"),
+        (100, float("-inf"), "Минус бесконечность 用于 SX"),
+        (0, 0, "Нулевая 深度"),
     ]
 
     for pm_depth, sx_depth, description in error_cases:
@@ -103,7 +103,7 @@ def analyze_performance():
 
     import time
 
-    # Тестируем скорость обработки
+    # 测试 скорость обработки
     test_depths = [(1000, 800)] * 1000
 
     start_time = time.time()
@@ -121,7 +121,7 @@ def analyze_performance():
 
 
 def main():
-    """Основная функция анализа"""
+    """Основная 函数 анализа"""
     print("🤖 ДЕТАЛЬНЫЙ АНАЛИЗ АРБИТРАЖНОГО БОТА")
     print("=" * 60)
     print()
@@ -132,7 +132,7 @@ def main():
     analyze_error_handling()
     analyze_performance()
 
-    print("✅ Анализ завершен!")
+    print("✅ 分析 завершен!")
 
 
 if __name__ == "__main__":

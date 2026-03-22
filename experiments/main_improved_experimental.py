@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Улучшенная версия main.py с реальными ID рынков и лучшей обработкой ошибок
+Улучшенная версия main.py 使用 реальными ID рынков 和 лучшей обработкой ошибок
 """
 
 import asyncio
@@ -12,7 +12,7 @@ from core.logging_config import setup_logging
 from core.metrics import init_metrics
 from connectors import polymarket, sx, kalshi  # noqa: F401
 
-# Реальные ID рынков для тестирования
+# Реальные ID рынков 用于 тестирования
 REAL_MARKET_IDS = {
     "polymarket": [
         "0x5177b16fef0e5c8c3b3b4b4b4b4b4b4b4b4b4b4b",  # Пример ID
@@ -28,7 +28,7 @@ REAL_MARKET_IDS = {
 async def test_market_connection(
     session: ClientSession, exchange: str, market_id: str
 ) -> bool:
-    """Тестируем подключение к рынку"""
+    """测试 подключение к рынку"""
     try:
         if exchange == "polymarket":
             await polymarket.orderbook_depth(session, market_id)
@@ -41,7 +41,7 @@ async def test_market_connection(
         return True
     except Exception as exc:
         logging.warning(
-            f"❌ Ошибка подключения к {exchange} рынку {market_id[:10]}...: {exc}"
+            f"❌ 错误 подключения к {exchange} рынку {market_id[:10]}...: {exc}"
         )
         return False
 
@@ -50,14 +50,14 @@ async def find_working_markets(session: ClientSession) -> tuple:
     """Находим рабочие рынки на обеих биржах"""
     logging.info("🔍 Поиск рабочих рынков...")
 
-    # Тестируем Polymarket
+    # 测试 Polymarket
     pm_market = None
     for market_id in REAL_MARKET_IDS["polymarket"]:
         if await test_market_connection(session, "polymarket", market_id):
             pm_market = market_id
             break
 
-    # Тестируем SX
+    # 测试 SX
     sx_market = None
     for market_id in REAL_MARKET_IDS["sx"]:
         if await test_market_connection(session, "sx", market_id):
@@ -70,11 +70,11 @@ async def find_working_markets(session: ClientSession) -> tuple:
 async def run_arbitrage_cycle(
     session: ClientSession, pm_market: str, sx_market: str
 ) -> None:
-    """Запускаем один цикл арбитража"""
+    """运行 一个 цикл арбитража"""
     try:
         logging.info("📊 Получение данных о глубине стакана...")
 
-        # Получаем данные о глубине
+        # Получаем 数据 о глубине
         pm_depth = await polymarket.orderbook_depth(session, pm_market)
         sx_depth = await sx.orderbook_depth(session, sx_market)
 
@@ -88,17 +88,17 @@ async def run_arbitrage_cycle(
                 opportunity.get('profit_bps', 0)
             )
         else:
-            logging.info("ℹ️  Арбитражные возможности не найдены")
+            logging.info("ℹ️  Арбитражные возможности 不 найдены")
 
-        logging.info("✅ Цикл арбитража завершен успешно")
+        logging.info("✅ Цикл арбитража завершен 成功")
 
     except Exception as exc:
-        logging.error(f"❌ Ошибка в цикле арбитража: {exc}")
+        logging.error(f"❌ 错误 в цикле арбитража: {exc}")
 
 
 async def main() -> None:
-    """Главная функция"""
-    parser = argparse.ArgumentParser(description="Арбитражный бот для Polymarket и SX")
+    """Главная 函数"""
+    parser = argparse.ArgumentParser(description="Арбитражный 机器人 用于 Polymarket 和 SX")
     parser.add_argument("--test", action="store_true", help="Режим тестирования")
     parser.add_argument(
         "--interval", type=int, default=30, help="Интервал между циклами (секунды)"
@@ -108,7 +108,7 @@ async def main() -> None:
     setup_logging(level=logging.INFO)
     init_metrics()
 
-    logging.info("🤖 Запуск арбитражного бота...")
+    logging.info("🤖 运行 арбитражного бота...")
 
     try:
         async with ClientSession() as session:
@@ -124,22 +124,22 @@ async def main() -> None:
             logging.info(f"   SX: {sx_market[:10]}...")
 
             if args.test:
-                # Режим тестирования - один цикл
-                logging.info("🧪 Запуск в режиме тестирования...")
+                # Режим тестирования - 一个 цикл
+                logging.info("🧪 运行 в режиме тестирования...")
                 await run_arbitrage_cycle(session, pm_market, sx_market)
             else:
                 # Режим работы - непрерывные циклы
                 logging.info(
-                    f"🔄 Запуск в режиме работы с интервалом {args.interval} сек..."
+                    f"🔄 运行 в режиме работы 使用 интервалом {args.interval} сек..."
                 )
                 while True:
                     await run_arbitrage_cycle(session, pm_market, sx_market)
                     await asyncio.sleep(args.interval)
 
     except KeyboardInterrupt:
-        logging.info("🛑 Бот остановлен пользователем")
+        logging.info("🛑 机器人 остановлен пользователем")
     except Exception as exc:
-        logging.error(f"❌ Неожиданная ошибка: {exc}", exc_info=True)
+        logging.error(f"❌ Неожиданная 错误: {exc}", exc_info=True)
         raise
 
 

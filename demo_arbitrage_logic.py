@@ -17,7 +17,7 @@ from core.processor import process_depth
 
 @dataclass
 class MockEvent:
-    """Моковое событие для демонстрации"""
+    """Моковое событие 用于 демонстрации"""
 
     title: str
     t_start: datetime
@@ -32,7 +32,7 @@ def print_header(text: str):
 
 
 def demonstrate_fuzzy_matching():
-    """Демонстрация fuzzy matching для сопоставления событий"""
+    """Демонстрация fuzzy matching 用于 сопоставления событий"""
     print_header("1. СОПОСТАВЛЕНИЕ СОБЫТИЙ (FUZZY MATCHING)")
 
     # Создаем моковые события
@@ -80,7 +80,7 @@ def demonstrate_fuzzy_matching():
     for i, event in enumerate(sx_events, 1):
         print(f"  {i}. {event.title} ({event.t_start.date()})")
 
-    # Используем matcher для сопоставления
+    # Используем matcher 用于 сопоставления
     print("\n🔍 Процесс сопоставления:")
     print("  Минимальный порог сходства: 87%")
     print("  Нормализация: lowercase, 'at' -> '@', убираем '-'")
@@ -98,7 +98,7 @@ def demonstrate_fuzzy_matching():
         score = score_event_match(pm, sx)
         print(f"     Match confidence: {score.confidence:.2f} ({score.category})")
 
-        # Показываем извлеченные команды для спортивных событий
+        # Показываем извлеченные команды 用于 спортивных событий
         if "@" in pm.title or "@" in sx.title:
             pm_teams = _extract_teams(pm.title)
             sx_teams = _extract_teams(sx.title)
@@ -113,16 +113,16 @@ async def demonstrate_event_validation():
     print_header("2. ВАЛИДАЦИЯ СОБЫТИЙ (PERPLEXITY API SONAR REASONING)")
 
     print("""
-📝 Perplexity Sonar Reasoning API используется для глубокой проверки:
+📝 Perplexity Sonar Reasoning API используется 用于 глубокой проверки:
    - Проверяет, относятся ли события к одному реальному событию
    - Анализирует критерии разрешения
-   - Chain-of-Thought рассуждение для выявления различий
+   - Chain-of-Thought рассуждение 用于 выявления различий
    - Возвращает уровень уверенности (high/medium/low)
    - Предупреждает о потенциальных неоднозначностях
 
 🔧 Параметры API:
    - Модель: sonar-reasoning
-   - reasoning_effort: high (максимальная глубина анализа)
+   - reasoning_effort: high (максимальная 深度 анализа)
    - Timeout: 30 секунд
 
 📊 Примеры результатов:
@@ -137,7 +137,7 @@ async def demonstrate_event_validation():
     print("  Event 2 (Kalshi):")
     print("    'Trump 2024 Presidential Victory'")
     print("    'YES if Trump elected president in 2024'")
-    print("\n  ✅ Результат:")
+    print("\n  ✅ 结果:")
     print("    VERDICT: SAME")
     print("    CONFIDENCE: HIGH")
     print("    REASONING: Both refer to 2024 US Presidential Election")
@@ -152,7 +152,7 @@ async def demonstrate_event_validation():
     print("  Event 2 (Kalshi):")
     print("    'Will Trump win the Republican nomination?'")
     print("    'Resolves YES if Trump wins nomination'")
-    print("\n  ❌ Результат:")
+    print("\n  ❌ 结果:")
     print("    VERDICT: DIFFERENT")
     print("    CONFIDENCE: HIGH")
     print("    REASONING: Different events - election vs nomination")
@@ -167,7 +167,7 @@ async def demonstrate_event_validation():
     print("  Event 2 (Kalshi):")
     print("    'BTC hits $100k this year'")
     print("    'Bitcoin reaches $100k in 2024'")
-    print("\n  ⚠️  Результат:")
+    print("\n  ⚠️  结果:")
     print("    VERDICT: SAME")
     print("    CONFIDENCE: MEDIUM")
     print("    REASONING: Same event but wording differs")
@@ -177,8 +177,8 @@ async def demonstrate_event_validation():
 💡 Когда использовать валидацию:
    - ✅ При автоматическом сопоставлении новых рынков
    - ✅ Когда fuzzy matching дает низкий score (87-92%)
-   - ✅ Для критических сделок с большими объемами
-   - ❌ Не нужна для идентичных названий (100% match)
+   - ✅ Для критических сделок 使用 большими объемами
+   - ❌ Не нужна 用于 идентичных названий (100% match)
 """)
 
 
@@ -193,8 +193,8 @@ async def demonstrate_depth_calculation():
 🔍 Логика расчета:
    1. Получаем глубину стакана на обеих биржах
    2. Берем МИНИМАЛЬНУЮ глубину (лимитирующий фактор)
-   3. На основе глубины определяем максимальное проскальзывание
-   4. Чем больше глубина → тем меньше проскальзывание
+   3. На основе глубины определяем максимальное 滑点
+   4. Чем больше 深度 → тем меньше 滑点
 
 ⚙️  Примеры расчета:
 """)
@@ -230,28 +230,28 @@ async def demonstrate_depth_calculation():
         print(f"\n  Пример {i}: {case['name']}")
         print(f"  {'-' * 60}")
         print(f"  📍 {case['description']}")
-        print(f"  📊 Глубина Polymarket: ${case['pm_depth']:.2f}")
-        print(f"  📊 Глубина SX: ${case['sx_depth']:.2f}")
+        print(f"  📊 深度 Polymarket: ${case['pm_depth']:.2f}")
+        print(f"  📊 深度 SX: ${case['sx_depth']:.2f}")
 
         max_slip = await process_depth(case["pm_depth"], case["sx_depth"])
 
         limiting_depth = min(case["pm_depth"], case["sx_depth"])
-        print(f"  🔒 Лимитирующая глубина: ${limiting_depth:.2f}")
-        print(f"  💹 Максимальное проскальзывание: {max_slip * 100:.2f}%")
+        print(f"  🔒 Лимитирующая 深度: ${limiting_depth:.2f}")
+        print(f"  💹 Максимальное 滑点: {max_slip * 100:.2f}%")
 
         # Объясняем решение
         for threshold, slip in sorted(SLIP_BY_DEPTH.items(), reverse=True):
             if limiting_depth >= threshold:
-                print(f"  ✓ Глубина >= ${threshold} → проскальзывание {slip * 100:.2f}%")
+                print(f"  ✓ 深度 >= ${threshold} → 滑点 {slip * 100:.2f}%")
                 break
 
     print("""
 💡 Практическое применение:
-   - Если max_slip = 0.1% и спред между биржами 0.5%
-     → Можно входить в сделку с прибылью ~0.4%
-   - Если max_slip = 0.2% и спред между биржами 0.15%
+   - Если max_slip = 0.1% 和 价差 между биржами 0.5%
+     → Можно входить в сделку 使用 прибылью ~0.4%
+   - Если max_slip = 0.2% 和 价差 между биржами 0.15%
      → Не входим в сделку (убыток -0.05%)
-   - Проскальзывание учитывает: execution costs, price impact, fees
+   - 滑点 учитывает: execution costs, price impact, fees
 """)
 
 
@@ -263,7 +263,7 @@ async def demonstrate_full_workflow():
 🔄 Этапы работы арбитражного бота:
 
 1️⃣  ОБНАРУЖЕНИЕ СОБЫТИЙ
-   - Получаем список активных рынков с Polymarket, SX, Kalshi
+   - Получаем список активных рынков 使用 Polymarket, SX, Kalshi
    - Фильтруем по объему, ликвидности, времени до разрешения
 
 2️⃣  СОПОСТАВЛЕНИЕ (MATCHING)
@@ -273,13 +273,13 @@ async def demonstrate_full_workflow():
    - Учитываем дату события
 
 3️⃣  ВАЛИДАЦИЯ (опционально)
-   - Для новых пар или низкого score
+   - Для новых пар 或 низкого score
    - Perplexity Sonar Reasoning API
-   - Chain-of-Thought анализ
-   - Проверка критериев разрешения
+   - Chain-of-Thought 分析
+   - 检查 критериев разрешения
 
 4️⃣  АНАЛИЗ ГЛУБИНЫ СТАКАНА
-   - Получаем orderbook с обеих бирж
+   - Получаем orderbook 使用 обеих бирж
    - Рассчитываем общую глубину (сумма bids + asks)
    - Определяем лимитирующий фактор (min depth)
 
@@ -290,11 +290,11 @@ async def demonstrate_full_workflow():
    - Depth < 500: 0.2% slippage
 
 6️⃣  ПРИНЯТИЕ РЕШЕНИЯ
-   - Рассчитываем спред между биржами
-   - Если спред > (max_slip + fees) → ВХОД В СДЕЛКУ
-   - Если спред < (max_slip + fees) → ПРОПУСК
+   - Рассчитываем 价差 между биржами
+   - Если 价差 > (max_slip + fees) → ВХОД В СДЕЛКУ
+   - Если 价差 < (max_slip + fees) → ПРОПУСК
 
-7️⃣  ИСПОЛНЕНИЕ (не реализовано в коде)
+7️⃣  ИСПОЛНЕНИЕ (不 реализовано в коде)
    - Размещение ордеров на обеих биржах
    - Мониторинг исполнения
    - Управление рисками
@@ -307,13 +307,13 @@ async def demonstrate_full_workflow():
 
 
 async def main():
-    """Главная функция"""
+    """Главная 函数"""
     print("\n")
     print("=" * 70)
     print("  🤖 ДЕМОНСТРАЦИЯ ЛОГИКИ АРБИТРАЖНОГО БОТА")
     print("=" * 70)
     print("""
-Этот скрипт демонстрирует ключевые компоненты логики бота:
+Этот 脚本 демонстрирует ключевые компоненты логики бота:
   • Сопоставление событий (fuzzy matching)
   • Валидация через Perplexity API
   • Расчет входа в сделку на основе глубины стакана

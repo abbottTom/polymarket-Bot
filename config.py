@@ -33,9 +33,8 @@ AUTO_MATCH_MAX_LLM_VALIDATIONS = int(os.getenv("AUTO_MATCH_MAX_LLM_VALIDATIONS",
 AUTO_MATCH_MIN_CONFIDENCE = float(os.getenv("AUTO_MATCH_MIN_CONFIDENCE", "0.4"))
 AUTO_MATCH_BUDGET_FRACTION = float(os.getenv("AUTO_MATCH_BUDGET_FRACTION", "0.5"))
 AUTO_MATCH_TOTAL_BUDGET = float(os.getenv("AUTO_MATCH_TOTAL_BUDGET", "0"))
-AUTO_MATCH_INCLUDE_KALSHI = (
-    os.getenv("AUTO_MATCH_INCLUDE_KALSHI", "false").lower() == "true"
-)
+# Kalshi permanently disabled
+AUTO_MATCH_INCLUDE_KALSHI = False  # DISABLED - Do not use Kalshi
 AUTO_MATCH_KALSHI_LIMIT = int(os.getenv("AUTO_MATCH_KALSHI_LIMIT", "50"))
 AUTO_MATCH_KALSHI_MIN_VOLUME = float(
     os.getenv("AUTO_MATCH_KALSHI_MIN_VOLUME", "0")
@@ -89,3 +88,9 @@ KALSHI_CONTRACT_SIDE = os.getenv("KALSHI_CONTRACT_SIDE", "yes").lower()
 
 # Trading mode configuration
 ENABLE_REAL_TRADING = os.getenv("ENABLE_REAL_TRADING", "false").lower() == "true"
+
+# Polymarket signature type
+# 0 = EOA (standard wallet with private key)
+# 1 = Email/Magic wallet (delegated signature)
+# 2 = Proxy contract signature
+POLYMARKET_SIGNATURE_TYPE = int(os.getenv("POLYMARKET_SIGNATURE_TYPE", "0"))

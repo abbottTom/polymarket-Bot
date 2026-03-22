@@ -1,8 +1,8 @@
 """
 Event validation using Perplexity API Sonar Reasoning.
 
-Этот модуль использует Perplexity Sonar Reasoning API для проверки того,
-являются ли события на разных платформах (Polymarket, SX, Kalshi) одинаковыми.
+此模块使用 Perplexity Sonar Reasoning API 来验证
+不同平台（Polymarket、SX、Kalshi）上的事件是否相同。
 """
 
 import json

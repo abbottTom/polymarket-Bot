@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Демо-версия арбитражного бота с моковыми данными
+套利机器人演示版本（使用模拟数据）
 """
 
 import argparse
@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Tuple
 from core.metrics import init_metrics
 from core.processor import process_depth
 
-# Моковые данные для демонстрации
+# 演示用的模拟数据
 MOCK_DEPTH_DATA = {
     "polymarket": {
         "bids": [
@@ -50,14 +50,14 @@ MOCK_DEPTH_DATA = {
 
 
 def generate_mock_depth() -> Tuple[Dict, Dict]:
-    """Генерируем моковые данные о глубине стакана с небольшими вариациями"""
+    """生成带有小幅变化的模拟订单簿深度数据"""
 
-    # Добавляем случайные вариации к базовым данным
+    # 向基础数据添加随机变化
     pm_depth: Dict[str, List[Dict[str, Any]]] = {"bids": [], "asks": []}
 
     sx_depth: Dict[str, List[Dict[str, Any]]] = {"bids": [], "asks": []}
 
-    # Генерируем данные для Polymarket
+    # 生成 Polymarket 数据
     for bid in MOCK_DEPTH_DATA["polymarket"]["bids"]:
         price_variation = random.uniform(-0.01, 0.01)
         size_variation = random.uniform(0.8, 1.2)
@@ -80,7 +80,7 @@ def generate_mock_depth() -> Tuple[Dict, Dict]:
             }
         )
 
-    # Генерируем данные для SX
+    # 生成 SX 数据
     for bid in MOCK_DEPTH_DATA["sx"]["bids"]:
         price_variation = random.uniform(-0.01, 0.01)
         size_variation = random.uniform(0.8, 1.2)
@@ -107,90 +107,90 @@ def generate_mock_depth() -> Tuple[Dict, Dict]:
 
 
 def print_depth_analysis(pm_depth: Dict, sx_depth: Dict) -> None:
-    """Выводим анализ глубины стакана"""
-    print("\n📊 АНАЛИЗ ГЛУБИНЫ СТАКАНА")
+    """输出订单簿深度分析"""
+    print("\n📊 订单簿深度分析")
     print("=" * 50)
 
     # Polymarket
     print("🔵 Polymarket:")
-    print("   Лучшие цены покупки:")
+    print("   最佳买入价格:")
     for i, bid in enumerate(pm_depth["bids"][:3]):
-        print(f"     {i+1}. ${bid['price']:.4f} - {bid['size']} шт")
+        print(f"     {i+1}. ${bid['price']:.4f} - {bid['size']} 个")
 
-    print("   Лучшие цены продажи:")
+    print("   最佳卖出价格:")
     for i, ask in enumerate(pm_depth["asks"][:3]):
-        print(f"     {i+1}. ${ask['price']:.4f} - {ask['size']} шт")
+        print(f"     {i+1}. ${ask['price']:.4f} - {ask['size']} 个")
 
     # SX
     print("\n🟡 SX:")
-    print("   Лучшие цены покупки:")
+    print("   最佳买入价格:")
     for i, bid in enumerate(sx_depth["bids"][:3]):
-        print(f"     {i+1}. ${bid['price']:.4f} - {bid['size']} шт")
+        print(f"     {i+1}. ${bid['price']:.4f} - {bid['size']} 个")
 
-    print("   Лучшие цены продажи:")
+    print("   最佳卖出价格:")
     for i, ask in enumerate(sx_depth["asks"][:3]):
-        print(f"     {i+1}. ${ask['price']:.4f} - {ask['size']} шт")
+        print(f"     {i+1}. ${ask['price']:.4f} - {ask['size']} 个")
 
-    # Спред
+    # 价差
     pm_spread = pm_depth["asks"][0]["price"] - pm_depth["bids"][0]["price"]
     sx_spread = sx_depth["asks"][0]["price"] - sx_depth["bids"][0]["price"]
 
-    print("\n📈 Спреды:")
+    print("\n📈 价差:")
     print(f"   Polymarket: {pm_spread:.4f} ({pm_spread*100:.2f}%)")
     print(f"   SX: {sx_spread:.4f} ({sx_spread*100:.2f}%)")
 
 
 def calculate_total_depth(orderbook: Dict) -> float:
-    """Вычисляем общую глубину стакана"""
+    """计算订单簿总深度"""
     total_bids = sum(order["size"] for order in orderbook.get("bids", []))
     total_asks = sum(order["size"] for order in orderbook.get("asks", []))
     return total_bids + total_asks
 
 
 async def demo_cycle(cycle_num: int) -> None:
-    """Выполняем один демо-цикл"""
-    print(f"\n🔄 ЦИКЛ #{cycle_num}")
+    """执行一个演示周期"""
+    print(f"\n🔄 周期 #{cycle_num}")
     print("=" * 30)
 
-    # Генерируем моковые данные
+    # 生成模拟数据
     pm_depth, sx_depth = generate_mock_depth()
 
-    # Выводим анализ
+    # 输出分析
     print_depth_analysis(pm_depth, sx_depth)
 
-    # Вычисляем общую глубину для каждой биржи
+    # 计算每个交易所的总深度
     pm_total_depth = calculate_total_depth(pm_depth)
     sx_total_depth = calculate_total_depth(sx_depth)
 
-    # Обрабатываем данные через основную логику бота
-    print("\n⚙️ Обработка данных...")
-    print(f"   Общая глубина Polymarket: {pm_total_depth:.0f}")
-    print(f"   Общая глубина SX: {sx_total_depth:.0f}")
+    # 通过机器人主要逻辑处理数据
+    print("\n⚙️ 处理数据中...")
+    print(f"   Polymarket 总深度: {pm_total_depth:.0f}")
+    print(f"   SX 总深度: {sx_total_depth:.0f}")
     await process_depth(pm_total_depth, sx_total_depth)
 
-    print(f"✅ Цикл #{cycle_num} завершен")
+    print(f"✅ 周期 #{cycle_num} 完成")
 
 
 async def main() -> None:
-    """Главная функция демо-бота"""
-    parser = argparse.ArgumentParser(description="Демо-версия арбитражного бота")
-    parser.add_argument("--cycles", type=int, default=3, help="Количество циклов")
+    """演示机器人主函数"""
+    parser = argparse.ArgumentParser(description="套利机器人演示版本")
+    parser.add_argument("--cycles", type=int, default=3, help="周期数量")
     parser.add_argument(
-        "--interval", type=int, default=5, help="Интервал между циклами (секунды)"
+        "--interval", type=int, default=5, help="周期之间的间隔（秒）"
     )
     args = parser.parse_args()
 
-    # Настройка логирования
+    # 日志配置
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
     )
     init_metrics()
 
-    print("🎭 ДЕМО-ВЕРСИЯ АРБИТРАЖНОГО БОТА")
+    print("🎭 套利机器人演示版本")
     print("=" * 50)
-    print("Этот бот демонстрирует логику арбитража с моковыми данными")
-    print(f"Количество циклов: {args.cycles}")
-    print(f"Интервал: {args.interval} сек")
+    print("此机器人使用模拟数据演示套利逻辑")
+    print(f"周期数量: {args.cycles}")
+    print(f"间隔: {args.interval} 秒")
     print()
 
     try:
@@ -198,15 +198,15 @@ async def main() -> None:
             await demo_cycle(cycle)
 
             if cycle < args.cycles:
-                print(f"\n⏳ Ожидание {args.interval} сек до следующего цикла...")
+                print(f"\n⏳ 等待 {args.interval} 秒直到下一个周期...")
                 await asyncio.sleep(args.interval)
 
-        print(f"\n🎉 Демонстрация завершена! Выполнено {args.cycles} циклов.")
+        print(f"\n🎉 演示完成！已执行 {args.cycles} 个周期。")
 
     except KeyboardInterrupt:
-        print("\n🛑 Демонстрация остановлена пользователем")
+        print("\n🛑 演示已被用户停止")
     except Exception as exc:
-        print(f"\n❌ Ошибка в демонстрации: {exc}")
+        print(f"\n❌ 演示中出错: {exc}")
         raise
 
 

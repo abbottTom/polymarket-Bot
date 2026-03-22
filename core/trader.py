@@ -1181,7 +1181,7 @@ async def execute_arbitrage_trade(
                 asyncio.create_task(
                     send_critical_alert(
                         "Unhedged position",
-                        "Buy leg провалился, продажа прошла — требуется ручная проверка",
+                        "买入失败但卖出成功 — 需要人工检查",
                         {
                             "sell_exchange": sell_exchange,
                             "sell_order": sell_order_id,
@@ -1213,7 +1213,7 @@ async def execute_arbitrage_trade(
                 asyncio.create_task(
                     send_critical_alert(
                         "Unhedged position",
-                        "Sell leg провалился, покупка прошла — требуется ручная проверка",
+                        "卖出失败但买入成功 — 需要人工检查",
                         {
                             "buy_exchange": buy_exchange,
                             "buy_order": buy_order_id,

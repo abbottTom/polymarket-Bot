@@ -18,7 +18,7 @@ def test_reset_pnl_sets_zero():
 async def test_process_depth_does_not_reset_pnl():
     g_pnl.set(3.0)
 
-    # Тестируем с числовыми значениями глубины
+    # 测试 使用 числовыми значениями глубины
     pm_depth = 2000.0  # 1000 + 1000
     sx_depth = 2000.0  # 1000 + 1000
 

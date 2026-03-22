@@ -2,7 +2,7 @@
 Enhanced alert system for sending notifications about critical events.
 
 Supports:
-- Telegram bot notifications
+- Lark (Feishu) webhook notifications
 - Discord webhook notifications
 """
 
@@ -18,19 +18,16 @@ class AlertManager:
 
     def __init__(self):
         """Initialize alert manager."""
-        self.telegram_token = os.getenv("TELEGRAM_BOT_TOKEN") or os.getenv(
-            "TELEGRAM_TOKEN"
-        )
-        self.telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+        self.lark_webhook = os.getenv("LARK_WEBHOOK_URL")
         self.discord_webhook = os.getenv("DISCORD_WEBHOOK_URL")
 
-        self.telegram_enabled = bool(self.telegram_token and self.telegram_chat_id)
+        self.lark_enabled = bool(self.lark_webhook)
         self.discord_enabled = bool(self.discord_webhook)
 
-        if not self.telegram_enabled and not self.discord_enabled:
+        if not self.lark_enabled and not self.discord_enabled:
             logging.warning(
                 "No alert channels configured! "
-                "Set TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID or DISCORD_WEBHOOK_URL"
+                "Set LARK_WEBHOOK_URL or DISCORD_WEBHOOK_URL"
             )
 
     async def send_critical_alert(
@@ -54,8 +51,8 @@ class AlertManager:
 
         # Send to all channels
         tasks = []
-        if self.telegram_enabled:
-            tasks.append(self._send_telegram(full_message))
+        if self.lark_enabled:
+            tasks.append(self._send_lark(full_message))
         if self.discord_enabled:
             tasks.append(self._send_discord(full_message, "CRITICAL"))
 
@@ -78,8 +75,8 @@ class AlertManager:
                 full_message += f"- {key}: {value}\n"
 
         tasks = []
-        if self.telegram_enabled:
-            tasks.append(self._send_telegram(full_message))
+        if self.lark_enabled:
+            tasks.append(self._send_lark(full_message))
         if self.discord_enabled:
             tasks.append(self._send_discord(full_message, "WARNING"))
 
@@ -98,35 +95,35 @@ class AlertManager:
                 full_message += f"- {key}: {value}\n"
 
         tasks = []
-        if self.telegram_enabled:
-            tasks.append(self._send_telegram(full_message))
+        if self.lark_enabled:
+            tasks.append(self._send_lark(full_message))
         if self.discord_enabled:
             tasks.append(self._send_discord(full_message, "INFO"))
 
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
 
-    async def _send_telegram(self, message: str):
-        """Send message via Telegram bot."""
+    async def _send_lark(self, message: str):
+        """Send message via Lark webhook."""
         try:
-            url = f"https://api.telegram.org/bot{self.telegram_token}/sendMessage"
             payload = {
-                "chat_id": self.telegram_chat_id,
-                "text": message,
-                "parse_mode": "Markdown",
+                "msg_type": "text",
+                "content": {
+                    "text": message
+                }
             }
 
             async with aiohttp.ClientSession() as session:
                 timeout = aiohttp.ClientTimeout(total=10.0)
-                async with session.post(url, json=payload, timeout=timeout) as resp:
+                async with session.post(self.lark_webhook, json=payload, timeout=timeout) as resp:
                     if resp.status == 200:
-                        logging.info("Telegram alert sent")
+                        logging.info("Lark alert sent")
                     else:
                         error = await resp.text()
-                        logging.error("Failed to send Telegram alert: %s", error)
+                        logging.error("Failed to send Lark alert: %s", error)
 
         except Exception as exc:
-            logging.error("Error sending Telegram alert: %s", exc)
+            logging.error("Error sending Lark alert: %s", exc)
 
     async def _send_discord(self, message: str, level: str):
         """Send message via Discord webhook."""

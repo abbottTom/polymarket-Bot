@@ -11,7 +11,8 @@ from core.processor import process_arbitrage
 from core.trader import execute_arbitrage_trade
 from core.statistics import get_statistics_collector
 from core.validation import validate_all
-from connectors import polymarket, sx, kalshi  # noqa: F401
+from connectors import polymarket, sx  # Kalshi disabled
+# from connectors import kalshi  # DISABLED - Kalshi functionality removed
 import config
 
 # Ensure aiohttp works with aiodns on Windows
@@ -104,7 +105,7 @@ async def main() -> None:
                     dry_run=not config.ENABLE_REAL_TRADING,
                     pm_api_key=os.getenv("POLYMARKET_API_KEY"),
                     sx_api_key=os.getenv("SX_API_KEY"),
-                    kalshi_api_key=os.getenv("KALSHI_API_KEY"),
+                    kalshi_api_key=None,  # Kalshi disabled
                 )
                 logging.info("Auto-match pipeline completed: %s", result)
                 return

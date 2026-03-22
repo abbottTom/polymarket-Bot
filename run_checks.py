@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Скрипт для быстрого запуска всех проверок арбитражного бота
+快速运行套利机器人所有检查的脚本
 """
 
 import subprocess
@@ -9,12 +9,12 @@ from pathlib import Path
 
 
 def run_command(command: str, description: str) -> bool:
-    """Запускает команду и возвращает True если успешно"""
+    """运行命令并在成功时返回 True"""
     print(f"\n🔍 {description}")
     print("=" * 60)
 
     try:
-        # Используем bash для выполнения команд с source
+        # 使用 bash 执行带 source 的命令
         result = subprocess.run(
             f"bash -c '{command}'",
             shell=True,
@@ -29,66 +29,66 @@ def run_command(command: str, description: str) -> bool:
             print(result.stderr)
 
         success = result.returncode == 0
-        status = "✅ УСПЕШНО" if success else "❌ ОШИБКА"
+        status = "✅ 成功" if success else "❌ 错误"
         print(f"\n{status}: {description}")
 
         return success
     except Exception as e:
-        print(f"❌ ОШИБКА: {e}")
+        print(f"❌ 错误: {e}")
         return False
 
 
 def main():
-    """Главная функция проверок"""
-    print("🤖 ПРОВЕРКА АРБИТРАЖНОГО БОТА")
+    """检查主函数"""
+    print("🤖 套利机器人检查")
     print("=" * 60)
 
-    # Активируем виртуальное окружение
+    # 激活虚拟环境
     venv_activate = "source venv/bin/activate && "
 
     checks = [
-        # Проверка зависимостей
-        (f"{venv_activate}pip list", "Проверка установленных зависимостей"),
-        # Запуск unit-тестов
-        (f"{venv_activate}python -m pytest tests/ -v", "Запуск unit-тестов"),
-        # Проверка синтаксиса основных файлов
-        (f"{venv_activate}python -m py_compile main.py", "Проверка синтаксиса main.py"),
+        # 检查依赖
+        (f"{venv_activate}pip list", "检查已安装依赖"),
+        # 运行单元测试
+        (f"{venv_activate}python -m pytest tests/ -v", "运行单元测试"),
+        # 检查主要文件语法
+        (f"{venv_activate}python -m py_compile main.py", "检查 main.py 语法"),
         (
             f"{venv_activate}python -m py_compile config.py",
-            "Проверка синтаксиса config.py",
+            "检查 config.py 语法",
         ),
         (
             f"{venv_activate}python -m py_compile core/processor.py",
-            "Проверка синтаксиса processor.py",
+            "检查 processor.py 语法",
         ),
         (
             f"{venv_activate}python -m py_compile core/matcher.py",
-            "Проверка синтаксиса matcher.py",
+            "检查 matcher.py 语法",
         ),
         (
             f"{venv_activate}python -m py_compile core/metrics.py",
-            "Проверка синтаксиса metrics.py",
+            "检查 metrics.py 语法",
         ),
         (
             f"{venv_activate}python -m py_compile core/alerts.py",
-            "Проверка синтаксиса alerts.py",
+            "检查 alerts.py 语法",
         ),
         (
             f"{venv_activate}python -m py_compile connectors/polymarket.py",
-            "Проверка синтаксиса polymarket.py",
+            "检查 polymarket.py 语法",
         ),
         (
             f"{venv_activate}python -m py_compile connectors/sx.py",
-            "Проверка синтаксиса sx.py",
+            "检查 sx.py 语法",
         ),
         (
             f"{venv_activate}python -m py_compile utils/retry.py",
-            "Проверка синтаксиса retry.py",
+            "检查 retry.py 语法",
         ),
-        # Демо-запуск бота
+        # 演示运行机器人
         (
             f"{venv_activate}python demo_bot.py --cycles 1 --interval 1",
-            "Демо-запуск бота",
+            "演示运行机器人",
         ),
     ]
 
@@ -97,8 +97,8 @@ def main():
         success = run_command(command, description)
         results.append((description, success))
 
-    # Итоговый отчет
-    print("\n📊 ИТОГОВЫЙ ОТЧЕТ")
+    # 最终报告
+    print("\n📊 最终报告")
     print("=" * 60)
 
     passed = sum(1 for _, success in results if success)
@@ -108,14 +108,14 @@ def main():
         status = "✅" if success else "❌"
         print(f"{status} {description}")
 
-    print(f"\n🎯 РЕЗУЛЬТАТ: {passed}/{total} проверок прошли успешно")
+    print(f"\n🎯 结果: {passed}/{total} 个检查通过")
 
     if passed == total:
-        print("🎉 ВСЕ ПРОВЕРКИ ПРОШЛИ УСПЕШНО!")
-        print("🚀 Бот готов к работе!")
+        print("🎉 所有检查都通过了！")
+        print("🚀 机器人已准备好工作！")
         return 0
     else:
-        print("⚠️  Некоторые проверки не прошли. Проверьте ошибки выше.")
+        print("⚠️  一些检查未通过。请检查上面的错误。")
         return 1
 
 

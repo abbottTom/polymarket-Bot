@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Скрипт для поиска активных рынков на биржах.
+查找交易所活跃市场的脚本。
 
-Этот скрипт помогает найти реальные market IDs для использования в боте:
-1. Получает список популярных рынков с каждой биржи
-2. Проверяет их ликвидность
-3. Выводит топ-N рынков с наибольшей ликвидностью
+此脚本帮助找到可用于机器人的真实 market IDs：
+1. 从每个交易所获取热门市场列表
+2. 检查它们的流动性
+3. 输出流动性最高的前 N 个市场
 
-Usage:
+用法：
     python scripts/find_markets.py [--limit 10]
 """
 
@@ -41,14 +41,14 @@ class Colors:
 
 async def find_polymarket_markets(session: ClientSession, limit: int = 10) -> List[Dict]:
     """
-    Найти популярные рынки на Polymarket.
+    查找 Polymarket 上的热门市场。
 
     API Documentation: https://docs.polymarket.com/
     """
     print(f"\n{Colors.BOLD}Searching Polymarket markets...{Colors.END}")
 
     try:
-        # Polymarket API endpoint для получения популярных рынков
+        # Polymarket API 端点用于获取热门市场
         url = "https://gamma-api.polymarket.com/markets"
         params = {
             'limit': limit * 2,  # Get more, filter later
@@ -142,21 +142,21 @@ async def find_polymarket_markets(session: ClientSession, limit: int = 10) -> Li
 
 async def find_sx_markets(session: ClientSession, limit: int = 10) -> List[Dict]:
     """
-    Найти популярные рынки на SX.
+    查找 SX 上的热门市场。
 
-    ⚠️ WARNING: SX market discovery is LIMITED/EXPERIMENTAL.
-    The API parsing below is a placeholder and may not work correctly.
+    ⚠️ 警告：SX 市场发现功能有限/实验性。
+    下面的 API 解析是占位符，可能无法正常工作。
 
-    RECOMMENDED: Find SX market IDs manually at https://sx.bet
-    Then verify them with: python scripts/check_sx_connector.py <market_id>
+    推荐：在 https://sx.bet 手动查找 SX market IDs
+    然后验证：python scripts/check_sx_connector.py <market_id>
     """
     print(f"\n{Colors.BOLD}Searching SX markets...{Colors.END}")
     print(f"{Colors.YELLOW}⚠ WARNING: SX integration is experimental{Colors.END}")
     print(f"{Colors.YELLOW}  Recommended to find market IDs manually at https://sx.bet{Colors.END}")
 
     try:
-        # SX API - нужно проверить актуальный endpoint
-        # Это пример, может потребоваться адаптация
+        # SX API - 需要检查实际端点
+        # 这是示例，可能需要调整
         url = "https://api.sx.bet/markets"
         params = {
             'limit': limit,
@@ -186,7 +186,7 @@ async def find_sx_markets(session: ClientSession, limit: int = 10) -> List[Dict]
 
 async def find_kalshi_markets(session: ClientSession, limit: int = 10) -> List[Dict]:
     """
-    Найти популярные рынки на Kalshi.
+    查找 Kalshi 上的热门市场。
 
     API Documentation: https://trading-api.readme.io/reference/getmarkets
     """

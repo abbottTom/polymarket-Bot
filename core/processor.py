@@ -470,10 +470,10 @@ def calculate_slippage(depth: float) -> float:
         logging.warning("Invalid depth: %s, using max slippage", depth)
         return max(SLIP_BY_DEPTH.values()) if SLIP_BY_DEPTH else 0.002
 
-    # По умолчанию используем максимальное проскальзывание
+    # 默认使用最大滑点
     max_slip = max(SLIP_BY_DEPTH.values()) if SLIP_BY_DEPTH else 0.002
 
-    # Находим подходящее проскальзывание на основе глубины
+    # 根据深度找到合适的滑点
     for d, slip in sorted(SLIP_BY_DEPTH.items(), reverse=True):
         if depth >= d:
             max_slip = slip
@@ -486,7 +486,7 @@ async def process_depth(pm_depth: float, sx_depth: float) -> float:
     """
     DEPRECATED: Use find_arbitrage_opportunity instead.
 
-    Определяем максимальное проскальзывание на основе глубины стакана с обеих бирж.
+    根据两个交易所的订单簿深度确定最大滑点。
     """
     # Validate inputs
     if pm_depth is None or sx_depth is None:
@@ -495,7 +495,7 @@ async def process_depth(pm_depth: float, sx_depth: float) -> float:
     if not isinstance(pm_depth, (int, float)) or not isinstance(sx_depth, (int, float)):
         raise TypeError("pm_depth and sx_depth must be numeric")
 
-    # Берем минимальную глубину (лимитирующий фактор)
+    # 取最小深度（限制因素）
     depth_value = min(pm_depth, sx_depth)
 
     max_slip = calculate_slippage(depth_value)

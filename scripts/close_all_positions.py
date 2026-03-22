@@ -30,7 +30,7 @@ async def close_positions() -> None:
 
     await send_info_alert(
         "Positions closed",
-        "Все позиции сброшены (виртуальные балансы обнулены).",
+        "所有持仓已关闭（虚拟余额已清零）。",
     )
 
     logging.info("Close-all routine finished")

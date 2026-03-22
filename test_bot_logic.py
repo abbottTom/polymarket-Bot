@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Тестовый скрипт для проверки логики бота с моковыми данными
+Тестовый 脚本 用于 проверки логики бота 使用 моковыми данными
 """
 
 import asyncio
@@ -16,23 +16,23 @@ init_metrics()
 
 @pytest.mark.asyncio
 async def test_bot_logic():
-    """Тестируем основную логику бота с моковыми данными"""
+    """测试 основную логику бота 使用 моковыми данными"""
 
     print("🤖 Тестирование логики арбитражного бота")
     print("=" * 50)
 
-    # Тестовые сценарии с разными значениями глубины
+    # Тестовые сценарии 使用 разными значениями глубины
     test_scenarios = [
-        (1500, 1200, "Высокая глубина - низкий проскальзывание"),
-        (800, 600, "Средняя глубина - средний проскальзывание"),
-        (300, 200, "Низкая глубина - высокий проскальзывание"),
-        (50, 30, "Очень низкая глубина - максимальный проскальзывание"),
+        (1500, 1200, "Высокая 深度 - низкий 滑点"),
+        (800, 600, "Средняя 深度 - средний 滑点"),
+        (300, 200, "Низкая 深度 - высокий 滑点"),
+        (50, 30, "Очень низкая 深度 - максимальный 滑点"),
     ]
 
     for pm_depth, sx_depth, description in test_scenarios:
-        print(f"\n📊 Тест: {description}")
-        print(f"   Глубина Polymarket: {pm_depth}")
-        print(f"   Глубина SX: {sx_depth}")
+        print(f"\n📊 测试: {description}")
+        print(f"   深度 Polymarket: {pm_depth}")
+        print(f"   深度 SX: {sx_depth}")
 
         try:
             # Calculate slippage based on depth
@@ -40,9 +40,9 @@ async def test_bot_logic():
             pm_slip = calculate_slippage(pm_depth)
             sx_slip = calculate_slippage(sx_depth)
             max_slip = max(pm_slip, sx_slip)
-            print(f"   ✅ Максимальное проскальзывание: {max_slip:.4f}")
+            print(f"   ✅ Максимальное 滑点: {max_slip:.4f}")
         except Exception as e:
-            print(f"   ❌ Ошибка: {e}")
+            print(f"   ❌ 错误: {e}")
 
     print("\n" + "=" * 50)
     print("✅ Тестирование завершено!")

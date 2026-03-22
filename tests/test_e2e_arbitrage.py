@@ -381,10 +381,10 @@ async def test_e2e_insufficient_balance(good_orderbooks):
 
         # Error should mention insufficient balance or risk limits
         # Can be either from balance manager ("Insufficient balance")
-        # or risk manager ("лимит экспозиции" / "exposure limit")
+        # or risk manager ("exposure limit" / "风险敞口限制")
         error_msg = str(exc_info.value).lower()
         assert any(keyword in error_msg for keyword in [
-            "insufficient balance", "balance", "экспозиции", "exposure"
+            "insufficient balance", "balance", "exposure", "敞口", "限制"
         ])
 
         # Verify NO orders were placed

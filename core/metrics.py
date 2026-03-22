@@ -2,6 +2,7 @@
 
 from prometheus_client import start_http_server, Gauge, Counter
 import threading
+import logging
 
 # Metrics
 g_edge = Counter("arb_signal_total", "Signals (edge found)")
@@ -23,7 +24,20 @@ _pnl_lock = threading.Lock()
 
 def init_metrics(port: int = 9090):
     """Start the Prometheus HTTP metrics server."""
-    start_http_server(port)
+    try:
+        start_http_server(port)
+        logging.info("Prometheus metrics server started on port %d", port)
+    except OSError as e:
+        if e.errno == 48:  # Address already in use
+            logging.warning(
+                "Metrics server port %d already in use. "
+                "Skipping metrics server initialization. "
+                "Metrics will still be collected but not exposed via HTTP.",
+                port
+            )
+        else:
+            logging.error("Failed to start metrics server: %s", e)
+            raise
 
 
 def reset_pnl() -> None:
