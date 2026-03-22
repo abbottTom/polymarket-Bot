@@ -204,10 +204,10 @@ def find_arbitrage_opportunity_generic(
     exchange_a: str,
     exchange_b: str,
     min_profit_bps: float = None,
-    outcome_a: str | None = None,
-    outcome_b: str | None = None,
-    market_a: str | None = None,
-    market_b: str | None = None,
+    outcome_a: Optional[str] = None,
+    outcome_b: Optional[str] = None,
+    market_a: Optional[str] = None,
+    market_b: Optional[str] = None,
 ) -> Optional[Dict]:
     """
     Find arbitrage opportunity between two orderbooks for any exchange pair.
@@ -421,10 +421,10 @@ def find_arbitrage_opportunity(
     pm_book: dict,
     sx_book: dict,
     min_profit_bps: float = None,  # Minimum profit in basis points (from config if None)
-    pm_market_id: str | None = None,
-    sx_market_id: str | None = None,
-    pm_outcome: str | None = None,
-    sx_outcome: str | None = None,
+    pm_market_id: Optional[str] = None,
+    sx_market_id: Optional[str] = None,
+    pm_outcome: Optional[str] = None,
+    sx_outcome: Optional[str] = None,
 ) -> Optional[Dict]:
     """
     Find arbitrage opportunity between two orderbooks.
@@ -509,8 +509,8 @@ async def process_depth(pm_depth: float, sx_depth: float) -> float:
 async def process_arbitrage(
     pm_book: dict,
     sx_book: dict,
-    pm_market_id: str | None = None,
-    sx_market_id: str | None = None,
+    pm_market_id: Optional[str] = None,
+    sx_market_id: Optional[str] = None,
 ) -> Optional[Dict]:
     """
     Process arbitrage between Polymarket and SX.
